@@ -46,3 +46,30 @@ const links = document.querySelectorAll(".titles a");
 for (let link of links) {
   link.addEventListener("click", titleClickHandler);
 }
+
+const generateTitleLinks = () => {
+  console.log("Title links generated!");
+
+  /* [DONE] clear title list */
+
+  const titlesList = document.querySelector(".titles, .list");
+  titlesList.innerHTML = "";
+
+  /* get every article id and generate title with link */
+
+  let html = "";
+
+  const articlesList = document.querySelectorAll(".posts article");
+  for (const article of articlesList) {
+    const articleId = article.getAttribute("id");
+    const articleTitle = article.querySelector(".post-title").innerHTML;
+
+    const articleLink = `<li><a href="#${articleId}"><span>${articleTitle}<span></a></li>`;
+
+    html = html + articleLink;
+  }
+
+  titlesList.innerHTML = html;
+};
+
+generateTitleLinks();
