@@ -101,11 +101,13 @@ function generateTags(){
 generateTags();
 
 
+
 function tagClickHandler(event){
   /* [DONE] prevent default action for this event */
   event.preventDefault();
   /* make new constant named "clickedElement" and give it the value of "this" */
   const clickedElement = this;
+  console.log(clickedElement);
   /* make a new constant "href" and read the attribute "href" of the clicked element */
   const href = clickedElement.getAttribute('href');
   /* make a new constant "tag" and extract tag from the "href" constant */
@@ -134,10 +136,13 @@ function tagClickHandler(event){
 
 function addClickListenersToTags(){
   /* find all links to tags */
-
+  const tagsLinksArray = document.querySelectorAll('a[href^="#tag-"]');
   /* START LOOP: for each link */
+  for(const tagLink of tagsLinksArray){
+    tagLink.addEventListener('click', tagClickHandler);
+  }
 
-    /* add tagClickHandler as event listener for that link */
+  /* add tagClickHandler as event listener for that link */
 
   /* END LOOP: for each link */
 }
