@@ -1,5 +1,9 @@
 'use strict';
 
+const optTagsListSelector = '.tags.list';
+const optCloudClassCount = 5;
+const optCloudClassPrefix = 'tag-size-';
+
 const titleClickHandler = function (event) {
   event.preventDefault();
   const clickedElement = this;
@@ -76,11 +80,23 @@ const generateTitleLinks = (customSelector = '') => {
 
 generateTitleLinks();
 
+function calculateTagClass(count, params) {
+  const normalizedCount = count - params.min;
+  const normalizedMax = params.max - params.min;
+  const percentage = normalizedCount / normalizedMax;
+  const classNumber = Math.floor( percentage * (optCloudClassCount - 1) + 1 );
+
+  return optCloudClassPrefix + classNumber;
+}
+
 
 function generateTags(){
   const optArticleTagsSelector = '.post-tags .list';
   /* find all articles */
   const allArticles = document.querySelectorAll('.posts article');
+
+  let allTags = {};
+
   /* START LOOP: for every article: */
   for(const article of allArticles) {
     const tagWrapper = article.querySelector(optArticleTagsSelector);
@@ -89,13 +105,67 @@ function generateTags(){
     const tagsArray = tags.split(' ');
 
     for(const tag of tagsArray){
-      const tagLink = `<li> <a href="#tag-${tag}">${tag}</a></li>`;
+      const tagLink = `<li><a href="#tag-${tag}">${tag}</a></li>`;
+
+      if(!allTags[tag]){
+        allTags[tag] = 1;
+      } else {
+        allTags[tag]++;
+      }
 
       html = html + tagLink + ' ';
     }
 
     tagWrapper.innerHTML = html;
   }
+  const tagList = document.querySelector(optTagsListSelector);
+
+  /* My solution - limited by the maximal amount of elements in an array
+  const calculateTagsParams = (allTags) => {
+    let values = [];
+
+    for(let tag in allTags){
+      values.push(allTags[tag]);
+    }
+    const maxValue = Math.max(...values);
+    const minValue = Math.min(...values);
+
+    return {max: maxValue, min: minValue,
+    };
+  };
+   */
+
+  const calculateTagsParams = (tags) => {
+    const params = {
+      min: 999999,
+      max: 0,
+    };
+
+    for(let tag in tags){
+      console.log(tag + ' is used ' + tags[tag] + ' times');
+
+      if(tags[tag] > params.max){
+        params.max = tags[tag];
+      }
+
+      if(tags[tag] < params.min){
+        params.min = tags[tag];
+      }
+    }
+
+    return params;
+  };
+
+
+
+  const tagsParams = calculateTagsParams(allTags);
+  console.log('tagsParams:', tagsParams);
+
+  let allTagsHTML = '';
+  for(let tag in allTags){
+    allTagsHTML += `<li><a href=#tag-${tag} class=${calculateTagClass(allTags[tag], tagsParams)}>` + tag + '</a><li>';
+  }
+  tagList.innerHTML = allTagsHTML;
 }
 
 generateTags();
