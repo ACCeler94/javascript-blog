@@ -1,5 +1,10 @@
 'use strict';
 
+const templates = {
+  articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
+  tagLink: Handlebars.compile(document.querySelector('#template-article-tag').innerHTML)
+};
+
 const optTagsListSelector = '.tags.list';
 const optCloudClassCount = 5;
 const optCloudClassPrefix = 'tag-size-';
@@ -65,9 +70,10 @@ const generateTitleLinks = (customSelector = '') => {
     const articleId = article.getAttribute('id');
     const articleTitle = article.querySelector('.post-title').innerHTML;
 
-    const articleLink = `<li><a href="#${articleId}"><span>${articleTitle}<span></a></li>`;
+    const linkHTMLData = {id: articleId, title: articleTitle};
+    const linkHTML = templates.articleLink(linkHTMLData);
 
-    html = html + articleLink;
+    html = html + linkHTML;
   }
   console.log(articlesList);
 
@@ -107,7 +113,10 @@ function generateTags(){
     const tagsArray = tags.split(' ');
 
     for(const tag of tagsArray){
-      const tagLink = `<li><a href="#tag-${tag}">${tag}</a></li>`;
+
+      const linkHTMLData = {articleTag: tag};
+      const linkHTML = templates.tagLink(linkHTMLData);
+      console.log(linkHTMLData);
 
       if(!allTags[tag]){
         allTags[tag] = 1;
@@ -115,7 +124,7 @@ function generateTags(){
         allTags[tag]++;
       }
 
-      html = html + tagLink + ' ';
+      html = html + linkHTML;
     }
 
     tagWrapper.innerHTML = html;

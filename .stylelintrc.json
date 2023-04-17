@@ -1,5 +1,9 @@
 {
   "extends": "stylelint-config-recommended-scss",
+  "ignoreFiles": [
+    "sass/*.css",
+    "sass/*.css.map"
+  ],
   "rules": {
     "block-no-empty": true,
     "color-no-invalid-hex": true,
@@ -9,13 +13,25 @@
     "declaration-block-trailing-semicolon": "always",
     "indentation": 2,
     "max-empty-lines": 2,
-    "max-nesting-depth": [3, {
-      "ignore": ["pseudo-classes"]
-    }],
-    "rule-empty-line-before": [ "always", {
-      "except": ["first-nested"],
-      "ignore": ["after-comment"]
-    } ],
+    "max-nesting-depth": [
+      3,
+      {
+        "ignore": [
+          "pseudo-classes"
+        ]
+      }
+    ],
+    "rule-empty-line-before": [
+      "always",
+      {
+        "except": [
+          "first-nested"
+        ],
+        "ignore": [
+          "after-comment"
+        ]
+      }
+    ],
     "unit-allowed-list": null,
     "no-descending-specificity": null,
     "scss/selector-no-redundant-nesting-selector": true,
