@@ -2,7 +2,8 @@
 
 const templates = {
   articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
-  tagLink: Handlebars.compile(document.querySelector('#template-article-tag').innerHTML)
+  tagLink: Handlebars.compile(document.querySelector('#template-article-tag').innerHTML),
+  authorLink: Handlebars.compile(document.querySelector('#template-article-author').innerHTML)
 };
 
 const optTagsListSelector = '.tags.list';
@@ -230,6 +231,9 @@ const generateAuthors = () => {
     const authorWrapper = article.querySelector(optArticleAuthorSelector);
     const author = article.getAttribute('data-author');
 
+    const linkHTMLData = {articleAuthor: author};
+    const linkHTML = templates.authorLink(linkHTMLData);
+
     // count how many articles belong to one author
     if(!allAuthorsObj[author]){
       allAuthorsObj[author] = 1;
@@ -237,7 +241,7 @@ const generateAuthors = () => {
       allAuthorsObj[author]++;
     }
     // generate link for authors visible in an article
-    authorWrapper.innerHTML = `by <a href="#author-${author}">${author}</a>`;
+    authorWrapper.innerHTML = linkHTML;
   }
 
   // generate link for the list of authors with a number of their articles
