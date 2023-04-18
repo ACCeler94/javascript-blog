@@ -3,7 +3,9 @@
 const templates = {
   articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
   tagLink: Handlebars.compile(document.querySelector('#template-article-tag').innerHTML),
-  authorLink: Handlebars.compile(document.querySelector('#template-article-author').innerHTML)
+  authorLink: Handlebars.compile(document.querySelector('#template-article-author').innerHTML),
+  tagCloudLink: Handlebars.compile(document.querySelector('#template-tag-cloud').innerHTML),
+  authorCloudLink: Handlebars.compile(document.querySelector('#template-author-cloud').innerHTML),
 };
 
 const optTagsListSelector = '.tags.list';
@@ -171,11 +173,16 @@ function generateTags(){
   const tagsParams = calculateTagsParams(allTags);
   console.log('tagsParams:', tagsParams);
 
-  let allTagsHTML = '';
+  const allTagsData = {tags: []};
   for(let tag in allTags){
-    allTagsHTML += `<li><a href=#tag-${tag} class=${calculateTagClass(allTags[tag], tagsParams)}>` + tag + '</a><li>';
+    allTagsData.tags.push({
+      tag: tag,
+      count: allTags[tag],
+      className: calculateTagClass(allTags[tag], tagsParams)
+    });
   }
-  tagList.innerHTML = allTagsHTML;
+  tagList.innerHTML = templates.tagCloudLink(allTagsData);
+  console.log(allTagsData);
 }
 
 generateTags();
@@ -225,7 +232,7 @@ const generateAuthors = () => {
   const optArticleAuthorSelector = '.post-author';
   const authorList = document.querySelector(optAuthorsListSelector);
   let allAuthorsObj = {};
-  let authorListLinks = '';
+
 
   for(const article of allArticles){
     const authorWrapper = article.querySelector(optArticleAuthorSelector);
@@ -245,12 +252,16 @@ const generateAuthors = () => {
   }
 
   // generate link for the list of authors with a number of their articles
+  const allAuthorsData = {authors: []};
   for(let author in allAuthorsObj){
-    authorListLinks += `<li><a href="#author-${author}">${author}(${allAuthorsObj[author]})</a></li>`;
+    allAuthorsData.authors.push({
+      author: author,
+      count: allAuthorsObj[author],
+    });
   }
 
-  authorList.innerHTML = authorListLinks;
-  console.log(allAuthorsObj);
+  authorList.innerHTML = templates.authorCloudLink(allAuthorsData);
+  console.log(allAuthorsData);
 };
 
 generateAuthors();
